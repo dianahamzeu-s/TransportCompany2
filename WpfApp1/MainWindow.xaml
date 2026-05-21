@@ -1,0 +1,244 @@
+﻿<Window x:Class="TransportCompanyWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Transport Company"
+        Height="700"
+        Width="1100"
+        Background="LightBlue">
+
+    <Window.Resources>
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="DarkSlateGray"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- MENIU -->
+        <StackPanel Grid.Column="0"
+                    Background="DarkSlateGray">
+
+            <Button Content="Adaugă Mașină"
+                    Click="BtnMeniuAdauga_Click"/>
+
+            <Button Content="Caută"
+                    Click="BtnMeniuCauta_Click"/>
+
+            <Button Content="Afișează"
+                    Click="BtnMeniuAfiseaza_Click"/>
+
+        </StackPanel>
+
+        <!-- CONTINUT -->
+        <Grid Grid.Column="1"
+              Margin="20">
+
+            <!-- ADAUGARE -->
+            <StackPanel x:Name="panelAdauga">
+
+                <TextBlock Text="Adaugă Mașină"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Margin="0,0,0,20"/>
+
+                <Label Content="Model"/>
+                <TextBox x:Name="txtModel"
+         Text="{Binding ElementName=cmbMasini,
+         Path=SelectedItem.Model,
+         Mode=TwoWay,
+         UpdateSourceTrigger=PropertyChanged,
+         ValidatesOnDataErrors=True}"/>
+
+                <TextBlock Foreground="Red"
+           FontSize="11"
+           Text="{Binding ElementName=txtModel,
+           Path=(Validation.Errors)/ErrorContent}"/>
+
+                <Label Content="Număr înmatriculare"/>
+                <TextBox x:Name="txtNumar"
+         Text="{Binding ElementName=cmbMasini,
+         Path=SelectedItem.NumarInmatriculare,
+         Mode=TwoWay,
+         UpdateSourceTrigger=PropertyChanged,
+         ValidatesOnDataErrors=True}"/>
+
+                <TextBlock Foreground="Red"
+           FontSize="11"
+           Text="{Binding ElementName=txtNumar,
+           Path=(Validation.Errors)/ErrorContent}"/>
+
+                <!-- COMBUSTIBIL -->
+                <Label Content="Combustibil"/>
+
+                <StackPanel Orientation="Horizontal">
+
+                    <RadioButton x:Name="rbBenzina"
+                                 Content="Benzină"
+                                 GroupName="Combustibil"
+                                 Margin="10"/>
+
+                    <RadioButton x:Name="rbMotorina"
+                                 Content="Motorină"
+                                 GroupName="Combustibil"
+                                 Margin="10"/>
+
+                </StackPanel>
+
+                <!-- CHECKBOX -->
+                <GroupBox Header="Opțiuni">
+
+                    <StackPanel>
+
+                        <CheckBox x:Name="cbGPS"
+                                  Content="GPS"
+                                  IsChecked="{Binding ElementName=cmbMasini,
+                                  Path=SelectedItem.GPS,
+                                  Mode=TwoWay}"/>
+
+                        <CheckBox x:Name="cbAC"
+                                  Content="Aer condiționat"/>
+
+                    </StackPanel>
+
+                </GroupBox>
+
+                <!-- LISTBOX -->
+                <TextBlock Text="Opțiuni suplimentare"
+                           Margin="0,10,0,5"/>
+
+                <ListBox x:Name="lstOptiuni"
+                         Height="100"
+                         SelectionMode="Multiple">
+
+                    <ListBoxItem Content="Scaune încălzite"/>
+                    <ListBoxItem Content="Pilot automat"/>
+                    <ListBoxItem Content="Cameră spate"/>
+
+                </ListBox>
+
+                <!-- DATEPICKER -->
+                <TextBlock Text="Data reviziei"
+                           Margin="0,10,0,5"/>
+
+                <DatePicker x:Name="dpRevizie"/>
+
+                <Button Content="Adaugă"
+                        Width="150"
+                        Click="BtnAdauga_Click"/>
+
+            </StackPanel>
+
+            <!-- CAUTARE -->
+            <StackPanel x:Name="panelCauta"
+                        Visibility="Collapsed">
+
+                <TextBlock Text="Caută Mașină"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Margin="0,0,0,20"/>
+
+                <TextBox x:Name="txtCautare"
+                         Width="300"
+                         Height="30"/>
+
+                <Button Content="Caută"
+                        Width="150"
+                        Click="BtnCauta_Click"/>
+
+            </StackPanel>
+
+            <!-- AFISARE -->
+            <StackPanel x:Name="panelAfiseaza"
+                        Visibility="Collapsed">
+
+                <TextBlock Text="Lista Mașini"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Margin="0,0,0,20"/>
+
+                <!-- COMBOBOX -->
+                <ComboBox x:Name="cmbMasini"
+                          Height="30"
+                          DisplayMemberPath="Model"
+                          SelectionChanged="cmbMasini_SelectionChanged"/>
+
+                <Button Content="Actualizează Mașina"
+        Width="180"
+        Click="BtnActualizeaza_Click"
+        IsEnabled="{Binding ElementName=cmbMasini,
+        Path=SelectedItem.EsteValid}"/>
+
+                <!-- DATAGRID -->
+                <DataGrid x:Name="dgMasini"
+                          Margin="10"
+                          Height="250"
+                          AutoGenerateColumns="False">
+
+                    <DataGrid.Columns>
+
+                        <DataGridTextColumn Header="Model"
+                                            Binding="{Binding Model}"
+                                            Width="*"/>
+
+                        <DataGridTextColumn Header="Număr"
+                                            Binding="{Binding NumarInmatriculare}"
+                                            Width="200"/>
+
+                        <DataGridTextColumn Header="Combustibil"
+                                            Binding="{Binding Combustibil}"
+                                            Width="150"/>
+
+                    </DataGrid.Columns>
+
+                </DataGrid>
+
+                <!-- TRASEE -->
+                <Separator Margin="10"/>
+
+                <TextBlock Text="Administrare Trasee"
+                           FontSize="22"
+                           FontWeight="Bold"
+                           Margin="0,10,0,10"/>
+
+                <Label Content="Plecare"/>
+                <TextBox x:Name="txtPlecare"/>
+
+                <Label Content="Destinație"/>
+                <TextBox x:Name="txtDestinatie"/>
+
+                <Label Content="Distanță"/>
+                <TextBox x:Name="txtDistanta"/>
+
+                <StackPanel Orientation="Horizontal">
+
+                    <Button Content="Adaugă Traseu"
+                            Click="BtnAdaugaTraseu_Click"/>
+
+                    <Button Content="Șterge Traseu"
+                            Click="BtnStergeTraseu_Click"/>
+
+                </StackPanel>
+
+                <DataGrid x:Name="dgTrasee"
+                          Height="200"
+                          Margin="10"
+                          AutoGenerateColumns="True"/>
+
+            </StackPanel>
+
+        </Grid>
+
+    </Grid>
+
+</Window>
